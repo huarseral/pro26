@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactos - LAChirana Plat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Overlay -->
+    <div id="offcanvasOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"></div>
+
+    <!-- Offcanvas Menu -->
+    <div id="offcanvasMenu" class="fixed left-0 top-0 h-full w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
+        <div class="flex items-center justify-between p-6 border-b">
+            <h2 class="text-xl font-bold text-gray-800">Menu</h2>
+            <button id="closeOffcanvas" class="text-gray-600 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="p-6">
+            <ul class="space-y-4">
+                <li><a href="index.html" class="block text-gray-700 hover:text-blue-600 font-medium transition">Home</a></li>
+                <li><a href="#" class="block text-gray-700 hover:text-blue-600 font-medium transition">About</a></li>
+                <li><a href="#" class="block text-gray-700 hover:text-blue-600 font-medium transition">Services</a></li>
+                <li><a href="contactos.html" class="block text-gray-700 hover:text-blue-600 font-medium transition">Contactos</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-800">LAChirana Plat</h1>
+            <button id="openOffcanvas" class="text-gray-700 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold text-gray-800 mb-12">Contáctanos</h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Map Section -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="p-6 border-b">
+                    <h2 class="text-2xl font-bold text-gray-800">Ubicaciones en Ica</h2>
+                    <p class="text-gray-600 mt-2">Nuestras oficinas en diferentes puntos de la ciudad</p>
+                </div>
+                <div id="map" class="w-full h-96"></div>
+                <div class="p-6">
+                    <button id="reloadMapBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
+                        Cargar nuevas ubicaciones
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Formulario de Contacto</h2>
+                <form id="leadsForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" placeholder="Tu nombre">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" placeholder="tu@email.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" placeholder="+51 9XX XXX XXX">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Asunto</label>
+                        <input type="text" id="asunto" name="asunto" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" placeholder="¿En qué podemos ayudarte?">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Mensaje</label>
+                        <textarea id="mensaje" name="mensaje" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" placeholder="Tu mensaje..."></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
+                        Enviar Formulario
+                    </button>
+                </form>
+
+                <!-- Saved Leads -->
+                <div class="mt-8 pt-8 border-t">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">Leads Guardados ({{count}})</h3>
+                    <div id="leadsContainer" class="space-y-3 max-h-60 overflow-y-auto">
+                        <!-- Leads will be populated here -->
+                    </div>
+                    <button id="clearLeadsBtn" class="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition">
+                        Limpiar todos los leads
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- WhatsApp Section -->
+        <div class="mt-12 bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg p-8 text-center">
+            <h2 class="text-3xl font-bold text-white mb-4">¿Necesitas información rápida?</h2>
+            <p class="text-green-50 text-lg mb-6">Contáctanos por WhatsApp y recibirás respuesta inmediatamente</p>
+            <a id="whatsappBtn" href="https://wa.me/?text=Deseo%20mas%20informacion" target="_blank" class="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-green-600 font-bold py-3 px-8 rounded-lg transition">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.868 1.533c-1.527.923-2.775 2.221-3.56 3.79-.797 1.611-.92 3.312-.348 4.956 1.315 3.572 4.795 5.994 8.588 5.994h.004c1.528 0 3.005-.282 4.411-.845l.045-.02 3.584.594-1.608-3.891.06-.045C20.537 15.769 21 13.876 21 11.973 21 7.025 17.025 3 12.051 3z"></path>
+                </svg>
+                Abrir WhatsApp
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // ========== OFFCANVAS MENU ==========
+        const openBtn = document.getElementById('openOffcanvas');
+        const closeBtn = document.getElementById('closeOffcanvas');
+        const offcanvasMenu = document.getElementById('offcanvasMenu');
+        const overlay = document.getElementById('offcanvasOverlay');
+
+        openBtn.addEventListener('click', () => {
+            offcanvasMenu.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        });
+
+        const closeOffcanvas = () => {
+            offcanvasMenu.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        };
+
+        closeBtn.addEventListener('click', closeOffcanvas);
+        overlay.addEventListener('click', closeOffcanvas);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeOffcanvas();
+        });
+
+        // ========== MAP INITIALIZATION ==========
+        const ICA_COORDINATES = [-13.5937, -75.7545];
+        let map;
+        let markers = [];
+
+        function initializeMap() {
+            if (!map) {
+                map = L.map('map').setView(ICA_COORDINATES, 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors',
+                    maxZoom: 19
+                }).addTo(map);
+            } else {
+                markers.forEach(marker => map.removeLayer(marker));
+                markers = [];
+            }
+
+            addRandomMarkers();
+        }
+
+        function addRandomMarkers() {
+            const locations = [
+                { name: 'Oficina Central', lat: -13.5937, lng: -75.7545 },
+                { name: 'Sucursal Norte', lat: -13.5700, lng: -75.7400 },
+                { name: 'Sucursal Sur', lat: -13.6100, lng: -75.7600 },
+                { name: 'Centro de Atención', lat: -13.5850, lng: -75.7650 },
+                { name: 'Almacén', lat: -13.6000, lng: -75.7500 }
+            ];
+
+            locations.forEach(location => {
+                const randomOffset = (Math.random() - 0.5) * 0.1;
+                const lat = location.lat + randomOffset;
+                const lng = location.lng + randomOffset;
+
+                const marker = L.marker([lat, lng], {
+                    title: location.name
+                }).addTo(map);
+
+                marker.bindPopup(`<b>${location.name}</b><br>Ica, Perú`);
+                markers.push(marker);
+            });
+        }
+
+        document.getElementById('reloadMapBtn').addEventListener('click', initializeMap);
+
+        // ========== LEADS FORM & STORAGE ==========
+        const leadsForm = document.getElementById('leadsForm');
+        const leadsContainer = document.getElementById('leadsContainer');
+        const clearLeadsBtn = document.getElementById('clearLeadsBtn');
+        const whatsappBtn = document.getElementById('whatsappBtn');
+
+        function saveLeadToStorage(lead) {
+            let leads = JSON.parse(localStorage.getItem('leads') || '[]');
+            lead.id = Date.now();
+            lead.date = new Date().toLocaleString('es-PE');
+            leads.push(lead);
+            localStorage.setItem('leads', JSON.stringify(leads));
+            return lead;
+        }
+
+        function getLeadsFromStorage() {
+            return JSON.parse(localStorage.getItem('leads') || '[]');
+        }
+
+        function displayLeads() {
+            const leads = getLeadsFromStorage();
+            leadsContainer.innerHTML = '';
+
+            leads.forEach(lead => {
+                const leadElement = document.createElement('div');
+                leadElement.className = 'bg-gray-100 p-3 rounded border-l-4 border-blue-600';
+                leadElement.innerHTML = `
+                    <p class="font-bold text-gray-800">${lead.nombre}</p>
+                    <p class="text-sm text-gray-600">${lead.email}</p>
+                    <p class="text-xs text-gray-500 mt-1">${lead.date}</p>
+                    <button onclick="deleteLead(${lead.id})" class="text-red-600 hover:text-red-800 text-xs mt-2">Eliminar</button>
+                `;
+                leadsContainer.appendChild(leadElement);
+            });
+
+            document.querySelector('h3').innerHTML = `Leads Guardados (${leads.length})`;
+        }
+
+        window.deleteLead = function(id) {
+            let leads = JSON.parse(localStorage.getItem('leads') || '[]');
+            leads = leads.filter(lead => lead.id !== id);
+            localStorage.setItem('leads', JSON.stringify(leads));
+            displayLeads();
+        };
+
+        leadsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const lead = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                asunto: document.getElementById('asunto').value,
+                mensaje: document.getElementById('mensaje').value
+            };
+
+            saveLeadToStorage(lead);
+            leadsForm.reset();
+            displayLeads();
+
+            alert('¡Lead guardado exitosamente!');
+        });
+
+        clearLeadsBtn.addEventListener('click', () => {
+            if (confirm('¿Estás seguro de eliminar todos los leads?')) {
+                localStorage.removeItem('leads');
+                displayLeads();
+            }
+        });
+
+        // ========== WHATSAPP BUTTON ==========
+        whatsappBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const message = encodeURIComponent('Deseo mas informacion');
+            window.open(`https://wa.me/?text=${message}`, '_blank');
+        });
+
+        // ========== INITIALIZE ==========
+        initializeMap();
+        displayLeads();
+    </script>
+</body>
+</html>
