@@ -1,0 +1,20 @@
+{
+  "attribution": {
+    "commit": ""
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git -C \"C:\\Users\\Huarseral\\Desktop\\proyecto\" status --porcelain | grep -q . && git -C \"C:\\Users\\Huarseral\\Desktop\\proyecto\" add . && git -C \"C:\\Users\\Huarseral\\Desktop\\proyecto\" commit -m \"$(jq -r '.tool_input.file_path // .tool_response.filePath' | xargs basename) updated\" 2>/dev/null || true",
+            "statusMessage": "Auto-committing changes",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}
